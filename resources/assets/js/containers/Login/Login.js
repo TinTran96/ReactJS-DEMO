@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
-import LoginForm from '../containers/login-form'
+import LoginForm from './Login-Form'
 
 
 class Login extends Component {
-	render() {
-	    return (
+    render() {
+        return (
             <LoginForm />
-           
-	    );
+
+        );
     }
 }
 

@@ -4,8 +4,8 @@ import { Grid, Row, Col, Table } from 'react-bootstrap';
 import Card from '../../components/Card/Card';
 import {connect} from "react-redux";
 import axios from 'axios';
-import CircularProgress from 'material-ui/CircularProgress';
-
+// import CircularProgress from 'material-ui/CircularProgress';
+import { ScaleLoader } from 'react-spinners';
 
 class TableIndex extends Component {
     constructor(props) {
@@ -57,7 +57,13 @@ class TableIndex extends Component {
     render() {
         return (
             <div className="content">
-                <div id="overlay"><div id="overlay-content"><CircularProgress size={80} thickness={5} /></div></div>
+                <div id="overlay"><div id="overlay-content">
+                    {/*<CircularProgress size={80} thickness={5} />*/}
+                    <ScaleLoader
+                        color={'#50E3C2'}
+                        loading={this.state.isFetchData}
+                    />
+                </div></div>
                 <Grid fluid>
                     <Row>
                         <Col md={12}>
