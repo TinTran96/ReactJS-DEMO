@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import { NavLink } from 'react-router-dom';
-
+import {connect} from 'react-redux';
 import HeaderLinks from '../Header/HeaderLinks';
 
-// import imagine from 'assets/img/sidebar-3.jpg';
-// import logo from 'assets/img/reactlogo.png';
+ import imagine from '../../assetss/img/sidebar-3.jpg';
+ import logo from '../../assetss/img/reactlogo.png';
 
 import appRoutes from '../../routes/app';
 
@@ -14,6 +14,7 @@ class Sidebar extends Component{
         this.state = {
             width: window.innerWidth
         }
+        console.log("User",this.props.user);
     }
     activeRoute(routeName) {
         return this.props.location.pathname.indexOf(routeName) > -1 ? 'active' : '';
@@ -33,14 +34,14 @@ class Sidebar extends Component{
             <div id="sidebar" className="sidebar" data-color="black" >
                 <div className="sidebar-background"></div>
                 <div className="logo">
-                    <a href="https://www.creative-tim.com" className="simple-text logo-mini">
+                    <a  className="simple-text logo-mini">
                         <div className="logo-img">
-                            {/*<img src={logo} alt="logo_image"/>*/}
+                            {<img src={this.props.user.resInfo.logo_path} alt="logo_image"/>}
                         </div>
 
                     </a>
-                    <a href="https://www.creative-tim.com" className="simple-text logo-normal">
-                        Creative Tim
+                    <a className="simple-text logo-normal">
+                        {this.props.user.resInfo.name}
                     </a>
                 </div>
                 <div className="sidebar-wrapper">
@@ -67,4 +68,9 @@ class Sidebar extends Component{
     }
 }
 
-export default Sidebar;
+function mapStateToProps(state){
+    return{
+        user:state.user
+    };
+}
+export default connect(mapStateToProps)(Sidebar);

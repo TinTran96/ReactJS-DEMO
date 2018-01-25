@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {userLogin} from '../../actions/index'
+import {userLogin, setToken} from '../../actions/index'
 import {withRouter} from "react-router-dom"
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton';
@@ -23,25 +23,29 @@ class LoginForm extends Component {
     {
         this.setState({open: false});
     }
-
+    check()
+    {
+        console.log("Chekc auth",this.props.auth);
+    }
     chooseRestaurant(obj)
     {
         console.log("OBJ res",obj);
         this.setState({open: false});
         this.props.userLogin(this.state,obj);
-        this.props.history.push("ho");
+        this.props.history.push("dashboard");
     }
 
     onSubmit(e){
         e.preventDefault();
         const {email , password} = this.state ;
-        axios.post('http://api.mysite.local:8080/login', {
+        axios.post('http://api.mysite.local:8000/login', {
             email,
             password
         })
             .then(response=> {
                 console.log("RES DATA",response);
                 this.setState({rest: response.data.restaurants,user:response.data.user_info})
+                this.props.setToken(response.data.token);
                 if(this.state.rest.length > 1)
                 {
                     this.setState({open: true});
@@ -102,7 +106,7 @@ class LoginForm extends Component {
                     <div className="row">
                         <div className="col-md-8 col-md-offset-2">
                             <div className="panel panel-default">
-                                <div className="panel-heading">Login</div>
+                                <div className="panel-heading" onClick={()=>this.check().bind(this)}>Login</div>
                                 <div className="panel-body">
                                     <div className="col-md-offset-2 col-md-8 col-md-offset-2">
                                         {error != undefined && <div className={name} role="alert">{msg}</div>}
@@ -156,9 +160,13 @@ class LoginForm extends Component {
         );
     }
 }
-
+function mapStateToProps(state){
+    return{
+        auth:state.auth
+    };
+}
 function matchDispatchToProps(dispatch){
-    return bindActionCreators({userLogin: userLogin}, dispatch);
+    return bindActionCreators({userLogin: userLogin,setToken: setToken}, dispatch);
 }
 
-export default connect(null,matchDispatchToProps)(withRouter(LoginForm));
+export default connect(mapStateToProps,matchDispatchToProps)(withRouter(LoginForm));

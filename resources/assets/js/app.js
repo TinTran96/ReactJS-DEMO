@@ -32,17 +32,13 @@ import './assetss/sass/light-bootstrap-dashboard.css';
 import './assetss/css/demo.css';
 import './assetss/css/pe-icon-7-stroke.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
-
-
-
 ReactDOM.render((
     <Provider store={Store}>
         <MuiThemeProvider>
             <BrowserRouter>
                 <Switch>
-                    <Route path="/ho" name="Home" component={App}/>
-                    <Route path='/' component={Login}/>
+                    <Route path="/login"  component={Login}/>
+                    <Route path='/' name="Home" component={App}/>
                 </Switch>
             </BrowserRouter>
         </MuiThemeProvider>

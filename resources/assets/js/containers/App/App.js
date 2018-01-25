@@ -14,7 +14,9 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import {style} from "../../variables/Variables";
 
 import appRoutes from '../../routes/app';
-
+import { connect } from 'react-redux'
+import {bindActionCreators} from 'redux'
+import {withRouter} from "react-router-dom"
 class App extends Component {
     constructor(props){
         super(props);
@@ -56,6 +58,11 @@ class App extends Component {
         });
     }
     componentDidMount(){
+        console.log("begin auth",this.props.auth)
+        if(!this.props.auth)
+        {
+            this.props.history.push('/login');
+        }
         this.setState({_notificationSystem: this.refs.notificationSystem});
         var _notificationSystem = this.refs.notificationSystem;
         var color = Math.floor((Math.random() * 4) + 1);
@@ -133,4 +140,10 @@ class App extends Component {
     }
 }
 
-export default App;
+function mapStateToProps(state){
+    return{
+        auth:state.auth
+    };
+}
+
+export default connect(mapStateToProps)(withRouter(App));

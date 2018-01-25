@@ -17,11 +17,10 @@ class TableIndex extends Component {
         this.on();
         this.setState({ isFetchData: true });
         let param={
-            'rest_id':2,
-            'id':this.props.user.id,
-            'area_id':0,
+            'rest_id':this.props.user.resInfo.id,
+            'id':this.props.user.userInfo.id,
         }
-        axios.post('http://api.mysite.local:8080/get_table_by_rest_id_demo', param)
+        axios.post('http://api.mysite.local:8000/get_table_by_rest_id_demo', param)
             .then(response=> {
                 console.log("Response==",response);
                 this.setState({ tables: response.data.tables, isFetchData: false  });
@@ -36,13 +35,17 @@ class TableIndex extends Component {
         if(this.state.tables instanceof Array){
             return this.state.tables.map(function(object, i){
                 return (
-                    <tr key={i}>
-                        <td>{object.id}</td>
-                        <td>{object.name}</td>
-                        <td>{object.area_id}</td>
-                        <td>{object.slots}</td>
-                        <td></td>
-                    </tr>
+                    <Col key={object.id} lg={3} sm={6}>
+                        <Card
+                            id={object.id}
+                            title={object.name}
+                            content={
+                                <div>
+                                    
+                                </div>
+                                }
+                        />
+                    </Col>
                 );
             }.bind(this))
         }
@@ -74,20 +77,9 @@ class TableIndex extends Component {
                                 category="Here is a subtitle for this table"
                                 ctTableFullWidth ctTableResponsive
                                 content={
-                                    <Table striped hover>
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Name</th>
-                                                <th>Area</th>
-                                                <th>Slot</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                                    <Row>
                                         {this.tabRow()}
-                                        </tbody>
-                                    </Table>
+                                    </Row>
                                 }
                             />
                         </Col>

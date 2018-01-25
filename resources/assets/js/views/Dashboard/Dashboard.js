@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 // import ChartistGraph from 'react-chartist';
 import { Grid, Row, Col } from 'react-bootstrap';
 
-
+import {connect} from "react-redux";
 import {Card} from '../../components/Card/Card';
 import {StatsCard} from '../../components/StatsCard/StatsCard';
 import {Tasks} from '../../components/Tasks/Tasks';
+import { ScaleLoader } from 'react-spinners';
 import {
     dataPie,
     legendPie,
@@ -20,153 +21,138 @@ import {
 } from '../../variables/Variables';
 
 class Dashboard extends Component {
-    createLegend(json){
-        var legend = [];
-        for(var i = 0; i < json["names"].length; i++){
-            var type = "fa fa-circle text-"+json["types"][i];
-            legend.push(
-                <i className={type} key={i}></i>
-            );
-            legend.push(" ");
-            legend.push(
-                json["names"][i]
-            );
+    constructor(props) {
+        super(props);
+        this.state = {
+                        contactCount: 0,
+                        tableCount:0,
+                        optionFoodItemCount: 0,
+                        categoryCount:0,
+                        orderCount:0,
+                        totalEmail:0,
+                        totalReservation:0,
+                        isFetchData: false
+                    };
+        console.log(this.props);
+    }
+    
+    componentDidMount(){
+        this.on();
+        this.setState({ isFetchData: true });
+        let param={
+            'rest_id':this.props.user.resInfo.id,
         }
-        return legend;
+        axios.post('http://api.mysite.local:8000/get_data_dashboard_demo', param)
+            .then(response=> {
+                console.log("Response==",response);
+                this.setState({
+                    contactCount:response.data.contacts,
+                    tableCount:response.data.tables,
+                    optionFoodItemCount:response.data.items,
+                    categoryCount:response.data.categories,
+                    orderCount:response.data.orders,
+                    totalEmail:response.data.emails,
+                    totalReservation:response.data.reservations,
+                    isFetchData: false  });
+                console.log("====",this.state);
+                this.off();
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
+    on() {
+        document.getElementById("overlay").style.display = "block";
+    }
+
+    off() {
+        document.getElementById("overlay").style.display = "none";
     }
     render() {
         return (
             <div className="content">
+                <div id="overlay"><div id="overlay-content">
+                    <ScaleLoader
+                        color={'#50E3C2'}
+                        loading={this.state.isFetchData}
+                    />
+                </div></div>
                 <Grid fluid>
                     <Row>
                         <Col lg={3} sm={6}>
                             <StatsCard
-                                bigIcon={<i className="pe-7s-server text-warning"></i>}
-                                statsText="Capacity"
-                                statsValue="105GB"
+                                bigIcon={<i className="pe-7s-cart text-warning"></i>}
+                                statsText="Total Ordering"
+                                statsValue={this.state.orderCount}
                                 statsIcon={<i className="fa fa-refresh"></i>}
-                                statsIconText="Updated now"
+                                statsIconText="View more ..."
                             />
                         </Col>
                         <Col lg={3} sm={6}>
                             <StatsCard
-                                bigIcon={<i className="pe-7s-wallet text-success"></i>}
-                                statsText="Revenue"
-                                statsValue="$1,345"
+                                bigIcon={<i className="fa fa-table text-success"></i>}
+                                statsText="Total Tables"
+                                statsValue={this.state.tableCount}
                                 statsIcon={<i className="fa fa-calendar-o"></i>}
-                                statsIconText="Last day"
+                                statsIconText="View more ..."
                             />
                         </Col>
                         <Col lg={3} sm={6}>
                             <StatsCard
-                                bigIcon={<i className="pe-7s-graph1 text-danger"></i>}
-                                statsText="Errors"
-                                statsValue="23"
+                                bigIcon={<i className="pe-7s-ticket text-danger"></i>}
+                                statsText="Total Reservations"
+                                statsValue={this.state.totalReservation}
                                 statsIcon={<i className="fa fa-clock-o"></i>}
-                                statsIconText="In the last hour"
+                                statsIconText="View more ..."
                             />
                         </Col>
                         <Col lg={3} sm={6}>
                             <StatsCard
-                                bigIcon={<i className="fa fa-twitter text-info"></i>}
-                                statsText="Followers"
-                                statsValue="+45"
+                                bigIcon={<i className="pe-7s-box2 text-info"></i>}
+                                statsText="Total Categories"
+                                statsValue={this.state.categoryCount}
                                 statsIcon={<i className="fa fa-refresh"></i>}
-                                statsIconText="Updated now"
+                                statsIconText="View more ..."
+                            />
+                        </Col>
+                        <Col lg={3} sm={6}>
+                            <StatsCard
+                                bigIcon={<i className="pe-7s-coffee text-info"></i>}
+                                statsText="Total Cuisine Items"
+                                statsValue={this.state.optionFoodItemCount}
+                                statsIcon={<i className="fa fa-refresh"></i>}
+                                statsIconText="View more ..."
+                            />
+                        </Col>
+                        <Col lg={3} sm={6}>
+                            <StatsCard
+                                bigIcon={<i className="pe-7s-id text-info"></i>}
+                                statsText="Total Contacts"
+                                statsValue={this.state.contactCount}
+                                statsIcon={<i className="fa fa-refresh"></i>}
+                                statsIconText="View more ..."
+                            />
+                        </Col>
+                        <Col lg={3} sm={6}>
+                            <StatsCard
+                                bigIcon={<i className="pe-7s-mail text-info"></i>}
+                                statsText="Total Emails"
+                                statsValue={this.state.totalEmail}
+                                statsIcon={<i className="fa fa-refresh"></i>}
+                                statsIconText="View more ..."
                             />
                         </Col>
                     </Row>
-                    <Row>
-                        <Col md={8}>
-                            <Card
-                                statsIcon="fa fa-history"
-                                id="chartHours"
-                                title="Users Behavior"
-                                category="24 Hours performance"
-                                stats="Updated 3 minutes ago"
-                                content={
-                                    <div className="ct-chart">
-                                        {/*<ChartistGraph*/}
-                                            {/*data={dataSales}*/}
-                                            {/*type="Line"*/}
-                                            {/*options={optionsSales}*/}
-                                            {/*responsiveOptions={responsiveSales}*/}
-                                        {/*/>*/}
-                                    </div>
-                                    }
-                                legend={
-                                    <div className="legend">
-                                        {this.createLegend(legendSales)}
-                                    </div>
-                                }
-                            />
-                        </Col>
-                        <Col md={4}>
-                            <Card
-                                statsIcon="fa fa-clock-o"
-                                title="Email Statistics"
-                                category="Last Campaign Performance"
-                                stats="Campaign sent 2 days ago"
-                                content={
-                                    <div id="chartPreferences" className="ct-chart ct-perfect-fourth">
-                                        {/*<ChartistGraph data={dataPie} type="Pie"/>*/}
-                                    </div>
-                                }
-                                legend={
-                                    <div className="legend">
-                                        {this.createLegend(legendPie)}
-                                    </div>
-                                }
-                            />
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col md={6}>
-                            <Card
-                                id="chartActivity"
-                                title="2014 Sales"
-                                category="All products including Taxes"
-                                stats="Data information certified"
-                                statsIcon="fa fa-check"
-                                content={
-                                    <div className="ct-chart">
-                                        {/*<ChartistGraph*/}
-                                            {/*data={dataBar}*/}
-                                            {/*type="Bar"*/}
-                                            {/*options={optionsBar}*/}
-                                            {/*responsiveOptions={responsiveBar}*/}
-                                        {/*/>*/}
-                                    </div>
-                                }
-                                legend={
-                                    <div className="legend">
-                                        {this.createLegend(legendBar)}
-                                    </div>
-                                }
-                            />
-                        </Col>
-
-                        <Col md={6}>
-                            <Card
-                                title="Tasks"
-                                category="Backend development"
-                                stats="Updated 3 minutes ago"
-                                statsIcon="fa fa-history"
-                                content={
-                                    <div className="table-full-width">
-                                        <table className="table">
-                                            <Tasks />
-                                        </table>
-                                    </div>
-                                }
-                            />
-                        </Col>
-                    </Row>
+                    
                 </Grid>
             </div>
         );
     }
 }
 
-export default Dashboard;
+function mapStateToProps(state){
+    return{
+        user:state.user
+    };
+}
+export default connect(mapStateToProps)(Dashboard);
