@@ -1,10 +1,7 @@
-var token = localStorage.getItem('id_token');
-console.log("Token reducer",token);
-var state = false; 
-if(token != undefined && token != null) {
-    state = true;
-}   
-const INITIAL_STATE = state;
+var jwtDecode = require('jwt-decode');
+import {AuthService} from '../services'
+
+const INITIAL_STATE = AuthService.setInitial();
 export default function(state=INITIAL_STATE,action){
     switch(action.type)
     {

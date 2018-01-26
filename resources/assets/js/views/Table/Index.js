@@ -4,6 +4,8 @@ import { Grid, Row, Col, Table } from 'react-bootstrap';
 import Card from '../../components/Card/Card';
 import {connect} from "react-redux";
 import axios from 'axios';
+import {TableService} from '../../services'
+
 // import CircularProgress from 'material-ui/CircularProgress';
 import { ScaleLoader } from 'react-spinners';
 
@@ -20,16 +22,14 @@ class TableIndex extends Component {
             'rest_id':this.props.user.resInfo.id,
             'id':this.props.user.userInfo.id,
         }
-        axios.post('http://api.mysite.local:8000/get_table_by_rest_id_demo', param)
-            .then(response=> {
-                console.log("Response==",response);
-                this.setState({ tables: response.data.tables, isFetchData: false  });
-                console.log("====",this.state);
+
+        TableService.findTableByRestID(param)
+            .then((response) => {
+                console.log("Response CALL BACK",response);
+                this.setState({ tables: response.tables, isFetchData: false  });
                 this.off();
             })
-            .catch(function (error) {
-                console.log(error);
-            })
+            .catch(error => error)
     }
     tabRow(){
         if(this.state.tables instanceof Array){
