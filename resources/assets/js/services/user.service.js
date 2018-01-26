@@ -1,6 +1,8 @@
+import axios from 'axios'
 export const UserService = {
     setInitial,
-    getDefault
+    getDefault,
+    userLogin,
 };
 
 const INITIAL_USER = {
@@ -13,6 +15,9 @@ const INITIAL_USER = {
             }
         }; 
 
+/**
+ * Set Initial State for user if user already login
+ */
 function setInitial()
 {
     var user = localStorage.getItem('user_store');
@@ -23,7 +28,22 @@ function setInitial()
     
 }
 
+/**
+ * Get default const INITIAL_USER
+ */
 function getDefault()
 {
     return INITIAL_USER;
+}
+
+/**
+ * Login to API, get TOKEN
+ * @param {username,password} param 
+ */
+function userLogin(param)
+{
+    var url ="http://api.mysite.local:8000/login";
+    return axios.post(url, param) // return here
+      .then(response => response.data)
+      .catch(error => error)
 }

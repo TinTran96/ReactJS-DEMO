@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import axios from 'axios'
+import {UserService} from '../../services'
 import { connect } from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {userLogin, setToken} from '../../actions/index'
@@ -8,6 +8,7 @@ import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton';
 import {List, ListItem} from 'material-ui/List';
 import Button from '../../elements/CustomButton/CustomButton';
+
 class LoginForm extends Component {
     constructor(props){
         super(props);
@@ -23,13 +24,9 @@ class LoginForm extends Component {
     {
         this.setState({open: false});
     }
-    check()
-    {
-        console.log("Chekc auth",this.props.auth);
-    }
+    
     chooseRestaurant(obj)
     {
-        console.log("OBJ res",obj);
         this.setState({open: false});
         this.props.userLogin(this.state,obj);
         this.props.history.push("dashboard");
@@ -38,37 +35,23 @@ class LoginForm extends Component {
     onSubmit(e){
         e.preventDefault();
         const {email , password} = this.state ;
-        axios.post('http://api.mysite.local:8000/login', {
+        UserService.userLogin({
             email,
             password
         })
-            .then(response=> {
-                console.log("RES DATA",response);
-                this.setState({rest: response.data.restaurants,user:response.data.user_info})
-                this.props.setToken(response.data.token);
+            .then((response) => {
+                this.setState({rest: response.restaurants,user:response.user_info})
+                this.props.setToken(response.token);
                 if(this.state.rest.length > 1)
                 {
                     this.setState({open: true});
                 }
-                console.log("SUCCESS");
-                // this.props.history.push("ho");
-                // let detail ={
-                //   email:this.state.email,
-                //   password:this.state.password};
-                // axios.post('http://api.mysite.local:8080/login', detail)
-                // .then(res=> {
-                //     console.log("RES DATA",res.data);
-                // this.props.userLogin(res.data);
-                // this.setState({err: false});
-
-                // });
-
-                //   })
-                //   .catch(error=> {
-                //     this.refs.email.value="";
-                //     this.refs.password.value="";
-                //     this.setState({err: true});
-            });
+            })
+               .catch(error=> {
+                    console.log("Error",error);
+                    this.refs.email.value="";
+                    this.refs.password.value="";
+                    this.setState({err: true});});
     }
 
     createList(){
@@ -106,7 +89,7 @@ class LoginForm extends Component {
                     <div className="row">
                         <div className="col-md-8 col-md-offset-2">
                             <div className="panel panel-default">
-                                <div className="panel-heading" onClick={()=>this.check().bind(this)}>Login</div>
+                                <div className="panel-heading">Login</div>
                                 <div className="panel-body">
                                     <div className="col-md-offset-2 col-md-8 col-md-offset-2">
                                         {error != undefined && <div className={name} role="alert">{msg}</div>}
