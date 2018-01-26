@@ -1,17 +1,17 @@
 import axios from 'axios';
 
-export const TableService = {
-    findTableByRestID,
+export const DashboardService = {
+    getDashboardData,
 };
 const HEADER = {headers: { Authorization: "Bearer " + localStorage.getItem('id_token') }}
 
 /**
- * Fetch table data by Restaurant ID
- * @param {rest_id,area_id,id} param 
+ * Get Dashboard data
+ * @param {rest_id} param 
  */
-function findTableByRestID(param)
+function getDashboardData(param)
 {
-    var url ="http://api.mysite.local:8000/get_table_by_rest_id";
+    var url ="http://api.mysite.local:8000/get_data_dashboard";
     return axios.post(url, param, HEADER) // return here
       .then(response => response.data)
       .catch(error => error)

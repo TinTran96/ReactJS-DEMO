@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-// import ChartistGraph from 'react-chartist';
 import { Grid, Row, Col } from 'react-bootstrap';
-
+import {DashboardService} from '../../services'
 import {connect} from "react-redux";
 import {Card} from '../../components/Card/Card';
 import {StatsCard} from '../../components/StatsCard/StatsCard';
@@ -42,24 +41,21 @@ class Dashboard extends Component {
         let param={
             'rest_id':this.props.user.resInfo.id,
         }
-        axios.post('http://api.mysite.local:8000/get_data_dashboard_demo', param)
-            .then(response=> {
-                console.log("Response==",response);
+        DashboardService.getDashboardData(param)
+            .then((response) => {
+                console.log("response table",response);
                 this.setState({
-                    contactCount:response.data.contacts,
-                    tableCount:response.data.tables,
-                    optionFoodItemCount:response.data.items,
-                    categoryCount:response.data.categories,
-                    orderCount:response.data.orders,
-                    totalEmail:response.data.emails,
-                    totalReservation:response.data.reservations,
+                    contactCount:response.contacts,
+                    tableCount:response.tables,
+                    optionFoodItemCount:response.items,
+                    categoryCount:response.categories,
+                    orderCount:response.orders,
+                    totalEmail:response.emails,
+                    totalReservation:response.reservations,
                     isFetchData: false  });
-                console.log("====",this.state);
                 this.off();
             })
-            .catch(function (error) {
-                console.log(error);
-            })
+            .catch(error => error)
     }
     on() {
         document.getElementById("overlay").style.display = "block";

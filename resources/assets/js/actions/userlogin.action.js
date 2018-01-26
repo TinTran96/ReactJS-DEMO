@@ -1,3 +1,8 @@
+/**
+ * Set app state user and restaurant
+ * @param {*} state 
+ * @param {*} res 
+ */
 export const userLogin = (state,res)=>{
   console.log("Login Submit : ",state);
   var param={userInfo:state.user,resInfo:res};

@@ -25,7 +25,6 @@ class TableIndex extends Component {
 
         TableService.findTableByRestID(param)
             .then((response) => {
-                console.log("Response CALL BACK",response);
                 this.setState({ tables: response.tables, isFetchData: false  });
                 this.off();
             })
@@ -61,7 +60,6 @@ class TableIndex extends Component {
         return (
             <div className="content">
                 <div id="overlay"><div id="overlay-content">
-                    {/*<CircularProgress size={80} thickness={5} />*/}
                     <ScaleLoader
                         color={'#50E3C2'}
                         loading={this.state.isFetchData}
@@ -70,8 +68,6 @@ class TableIndex extends Component {
                 <Grid fluid>
                     <Row>
                         <Col md={12}>
-                            {/*{ this.state.isFetchData ? <CircularProgress size={80} thickness={5} /> : null }*/}
-
                             <Card
                                 title="Striped Table with Hover"
                                 category="Here is a subtitle for this table"

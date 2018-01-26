@@ -1,12 +1,11 @@
+/**
+ * Set localStorage token
+ * @param {*} token 
+ */
 export const setToken = (token)=>{
-  console.log("Set token", token);
-  if(token){     
-      //Impementing the Key and IV and encrypt the password
-      // var encryptedToken = CryptoJS.AES.encrypt(token, this.KEY, {iv: this.IV});  
-      // console.log('encrypted ', encryptedToken.toString());     
+  if(token){  
       localStorage.setItem('id_token', token); 
     } else {
-      // window.sessionStorage.removeItem('token');
       localStorage.removeItem('id_token');
     }
   return{
